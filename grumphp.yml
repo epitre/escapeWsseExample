@@ -1,0 +1,26 @@
+parameters:
+    git_dir: .
+    bin_dir: vendor/bin
+    tasks:
+        composer: ~
+        git_blacklist: ~
+        git_commit_message: ~
+        git_conflict: ~
+        phpparser:
+            ignore_patterns: ["SymfonyRequirements.php", "app_dev.php", "web/config.php"]
+            kind: php7
+            visitors:
+#                never_use_else: ~
+                no_exit_statements: ~
+                forbidden_function_calls:
+                    blacklist:
+                        - 'var_dump'
+                        - 'echo'
+        phpcsfixer2:
+            allow_risky: false
+            cache_file: ~
+            config: ~
+            rules: []
+            using_cache: true
+            path_mode: ~
+            verbose: true

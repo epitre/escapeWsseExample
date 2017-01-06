@@ -1,0 +1,59 @@
+# To get started with security, check out the documentation:
+# http://symfony.com/doc/current/book/security.html
+security:
+    encoders:
+        FOS\UserBundle\Model\UserInterface: bcrypt
+
+
+    role_hierarchy:
+        ROLE_USER:        ROLE_API
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
+    # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
+    providers:
+        fos_userbundle:
+            id: fos_user.user_provider.username_email
+
+    firewalls:
+        wsse_secured:
+            pattern:   ^/v1/.*
+            stateless: true
+            wsse:
+                realm: "Secured with WSSE" #identifies the set of resources to which the authentication information will apply (WWW-Authenticate)
+                profile: "UsernameToken" #WSSE profile (WWW-Authenticate)
+                lifetime: 6000
+                encoder: #digest algorithm
+                    algorithm: sha1
+                    encodeHashAsBase64: true
+                    iterations: 1
+        # on autorise aussi à accéder à la doc
+        dev:
+            pattern: ^/((_(profiler|wdt)|css|images|js)/|(doc/v1))
+            anonymous:    true
+#            security:     false
+        main:
+            pattern: ^/
+            form_login:
+                provider: fos_userbundle
+                csrf_token_generator: security.csrf.token_manager
+                use_referer: true
+                use_forward: false
+
+            logout:       true
+            anonymous:    true
+            # activate different ways to authenticate
+
+            # http_basic: ~
+            # http://symfony.com/doc/current/book/security.html#a-configuring-how-your-users-will-authenticate
+
+            # form_login: ~
+            # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
+
+    access_control:
+        - { path: ^/v1/, role: [ IS_AUTHENTICATED_FULLY ] }
+        - { path: ^/((_(profiler|wdt)|css|images|js)/|(doc/v1)), role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/, role: ROLE_ADMIN }

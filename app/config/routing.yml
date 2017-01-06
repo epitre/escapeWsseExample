@@ -1,0 +1,11 @@
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
+
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
+
+ApiV1:
+    type: rest
+    resource: "@ExampleWsseApiBundle/Resources/config/routing.yml"
+    prefix: /v1/

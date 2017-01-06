@@ -1,0 +1,58 @@
+imports:
+    - { resource: config.yml }
+
+framework:
+    test: ~
+    session:
+        storage_id: session.storage.mock_file
+    profiler:
+        collect: false
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        path: "%kernel.cache_dir%/test.db"
+        driver: "pdo_sqlite"
+        memory: true
+
+    orm:
+        auto_generate_proxy_classes: "%kernel.debug%"
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        auto_mapping: true
+
+fos_user:
+    firewall_name: dev
+
+liip_functional_test:
+    cache_sqlite_db: true
+
+nelmio_api_doc: ~
+
+monolog:
+    handlers:
+        main:
+            type: stream
+            path: "%kernel.logs_dir%/%kernel.environment%.log"
+            level: debug
+            channels: [!event]
+        console:
+            type:   console
+            channels: [!event, !doctrine]
+        # uncomment to get logging in your browser
+        # you may have to allow bigger header sizes in your Web server configuration
+        #firephp:
+        #    type:   firephp
+        #    level:  info
+        #chromephp:
+        #    type:   chromephp
+        #    level:  info
+
+web_profiler:
+    toolbar: false
+    intercept_redirects: false
+
+swiftmailer:
+    disable_delivery: true
+
+escape_wsse_authentication:
+    authentication_nonce_cache_class: "Doctrine\\Common\\Cache\\VoidCache"

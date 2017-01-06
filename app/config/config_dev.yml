@@ -1,0 +1,55 @@
+imports:
+    - { resource: config.yml }
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        # instead of configuring the database access options in this file, we pull
+        # them from the app/config/parameters.yml file. The reason is that config.yml
+        # stores options that change the application behavior and parameters.yml
+        # stores options that change from one server to another
+        driver: "pdo_sqlite"
+        # temp workaround for https://github.com/doctrine/dbal/issues/1106: define DB path here
+        path: "%database_path%"
+
+    orm:
+        auto_generate_proxy_classes: "%kernel.debug%"
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        auto_mapping: true
+
+framework:
+    router:
+        resource: "%kernel.root_dir%/config/routing_dev.yml"
+        strict_requirements: true
+    profiler: { only_exceptions: false }
+
+web_profiler:
+    toolbar: true
+    intercept_redirects: false
+
+monolog:
+    handlers:
+        main:
+            type: stream
+            path: "%kernel.logs_dir%/%kernel.environment%.log"
+            level: debug
+            channels: [!event]
+        console:
+            type:   console
+            channels: [!event, !doctrine]
+        # uncomment to get logging in your browser
+        # you may have to allow bigger header sizes in your Web server configuration
+        firephp:
+            type:   firephp
+            level:  info
+        chromephp:
+            type:   chromephp
+            level:  info
+
+fos_user:
+    firewall_name: dev
+
+nelmio_api_doc: ~
+
+#swiftmailer:
+#    delivery_address: me@example.com

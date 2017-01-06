@@ -1,0 +1,3 @@
+ExampleWsse_api_company:
+    type:     rest
+    resource: ExampleWsseApiBundle\Controller\CompanyController
